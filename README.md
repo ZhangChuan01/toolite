@@ -9,30 +9,32 @@ toolite
     import toolite from 'toolite'    
 ##### 3. 使用     
     可以在使用的地方直接引入整个工具或者单个函数    
-    个人喜欢以下操作    
-    在main.ts中执行以下操作以便于在template及script全局使用    
+    个人喜欢以下操作以便于在script和template中全局使用    
+    在main.ts中加入以下代码    
+    declare module '@vue/runtime-core' {
+        interface ComponentCustomProperties {
+            $toolite: typeof toolite
+        }
+    }     
     window.$toolite = toolite     
 
     const app = createApp(App)   
 
     app.config.globalProperties.$toolite = toolite     
 
-    在vite-env.d.ts中加入一下代码以便于template中全局使用    
-    import toolite from 'toolite'   
+    在vite-env.d.ts中加入以下代码       
 
-    declare module '@vue/runtime-core' {
-        interface ComponentCustomProperties {
-            $toolite: toolite
-        }
-    }    
+    interface Window {
+        $toolite: typeof import('toolite').default
+    }      
 
     
 ##### 4. 函数简单介绍          
 
-| 函数名                | 简单描述                           |
+| 函数名                | 简单描述（具体函数参数可在使用时看ts提示）                           |
 | --------------------- | ------------------------------ |
 | dateFormat            | 格式化时间                      |
-| dateDiff              | 计算时间差，不局限于天，月，等    |
+| dateDiff              | 计算时间差，不局限于天，月等单位    |
 | getDateByTimeOffset   | 根据指定的起始时间、时间偏移量、时间单位和返回时间格式获取相应的日期时间    |
 | isTimeWithinIntervals   | 检查给定的时间是否在一组时间区间内（针对于格式为HH:mm:ss的时间）    |
 | exportExcel   | 导出数据为 Excel 文件    |

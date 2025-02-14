@@ -613,6 +613,8 @@ const toolite = {
   getMouseAngleToDom,
   hexToRgba,
   downloadFile,
+  debounce,
+  throttle,
   deepClone
 }
 export default toolite
