@@ -55,6 +55,7 @@ export function getDateByTimeOffset({ startTime, num = 0, type = 'd', format = '
 }
 /**
  * 检查给定的时间是否在一组时间区间内
+ * 主要用于创建一组时间区间，然后检查给定的时间是否与这些区间内有交集，其中创建的start可以等于其他时间范围的end，创建的end可以等于其他时间范围的start
  * 
  * type为start，则时间可以等于数组内的结束时间，为end则可以等于数组内的开始时间
  * @param {Object} options - 包含检查所需信息的对象
@@ -601,6 +602,27 @@ export function deepClone(obj, map = new WeakMap()) {
 
   return clone
 }
+/**
+ * 判断时间是否在指定时间范围内
+ * @param {String | Date}time 传入时间可以是String或Date
+ * @param {String}startTime 开始时间
+ * @param {String}endTime 结束时间
+ * @returns {Boolean}
+ */
+export function isTimeRange(time: string | Date, startTime: string, endTime: string) {
+  const start = timeToSeconds(startTime)
+  const end = timeToSeconds(endTime)
+  const currentTime = timeToSeconds(moment(time).format('HH:mm:ss'))
+  if(start <= end){
+    return currentTime >= start && currentTime < end
+  }else{
+    return currentTime >= start || currentTime < end
+  }
+}
+const timeToSeconds = timeStr => {
+  const [ hours, minutes, seconds ] = timeStr.split(':').map(Number)
+  return hours * 3600 + minutes * 60 + seconds
+}
 const toolite = {
   dateFormat,
   dateDiff,
@@ -615,6 +637,7 @@ const toolite = {
   downloadFile,
   debounce,
   throttle,
-  deepClone
+  deepClone,
+  isTimeRange
 }
 export default toolite

@@ -37,6 +37,7 @@ toolite
 | dateDiff              | 计算时间差，不局限于天，月等单位    |
 | getDateByTimeOffset   | 根据指定的起始时间、时间偏移量、时间单位和返回时间格式获取相应的日期时间    |
 | isTimeWithinIntervals   | 检查给定的时间是否在一组时间区间内（针对于格式为HH:mm:ss的时间）    |
+| isTimeRange   | 指定开始和结束时间，判断时间是否在此范围内（HH:mm:ss）    |
 | exportExcel   | 导出数据为 Excel 文件    |
 | setPosition   | 根据角度和半径指定元素位置，支持自定义圆心位置，起始角度和旋转方向    |
 | formatNumber   | 安全截断数值（不四舍五入），避免科学计数法和精度丢失问题    |
