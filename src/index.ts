@@ -623,6 +623,12 @@ const timeToSeconds = timeStr => {
   const [ hours, minutes, seconds ] = timeStr.split(':').map(Number)
   return hours * 3600 + minutes * 60 + seconds
 }
+/**
+ * 监听DOM尺寸变化，并执行一个回调函数
+ * @param dom 要监听的DOM，可以是DOM元素或选择器
+ * @param callback 尺寸变化时执行的回调函数
+ * @returns 
+ */
 const listenDomSizeChange = (dom: HTMLElement | string, callback: () => void) => {
   const ele = typeof dom === 'string' ? document.querySelector(dom) : dom
   if(!ele) return
