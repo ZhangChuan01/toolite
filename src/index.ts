@@ -623,6 +623,14 @@ const timeToSeconds = timeStr => {
   const [ hours, minutes, seconds ] = timeStr.split(':').map(Number)
   return hours * 3600 + minutes * 60 + seconds
 }
+const listenDomSizeChange = (dom: HTMLElement | string, callback: () => void) => {
+  const ele = typeof dom === 'string' ? document.querySelector(dom) : dom
+  if(!ele) return
+  const observerContainer = new ResizeObserver(() => {
+    callback()
+  })
+  observerContainer.observe(ele)
+}
 const toolite = {
   dateFormat,
   dateDiff,
@@ -638,6 +646,7 @@ const toolite = {
   debounce,
   throttle,
   deepClone,
-  isTimeRange
+  isTimeRange,
+  listenDomSizeChange
 }
 export default toolite

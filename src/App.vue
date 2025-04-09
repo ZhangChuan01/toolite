@@ -30,9 +30,16 @@ const addMouseMoveEvent = () => {
 const a = { x: 10 }
 const b = toolite.deepClone(a)
 b.x = 100
+
+const listenDom = () => {
+  toolite.listenDomSizeChange('body', () => {
+    console.log('body')
+  })
+}
 onMounted(() => {
   setPoint()
   addMouseMoveEvent()
+  listenDom()
 })
 </script>
 

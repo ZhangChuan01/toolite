@@ -48,3 +48,4 @@ toolite
 | debounce   | 防抖    |
 | throttle   | 节流    |
 | deepClone   | 深克隆    |
+| listenDomSizeChange   | 监听dom尺寸变化并执行一个回调函数    |
