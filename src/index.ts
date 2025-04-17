@@ -121,10 +121,10 @@ function isDateBetween(date: Date, start: Date, end: Date): boolean {
  * @param {Object} options - 包含导出所需信息的对象
  * @param {any[][]} options.data - 要导出为 Excel 的二维数组数据，数组的每一项代表一行数据
  * @param {number} [options.wpx = 150] - 可选参数，指定 Excel 表格中每列的宽度，默认为 150
- * @param {string} [options.fileName] - 可选参数，指定导出的 Excel 文件的文件名。若未提供，
- *                                       则使用当前日期格式化后的字符串作为文件名
+ * @param {string} [options.fileName] - 可选参数，指定导出的 Excel 文件的文件名。若未提供则只有时间戳
+ * @param {boolean} [options.fileNameNeedTime = true] - 可选参数，指定是否在文件名中包含时间戳
  */
-export function exportExcel({ data,wpx = 150,fileName }:{data: any[][],wpx?: number, fileName?: string}) {
+export function exportExcel({ data, wpx = 150, fileName, fileNameNeedTime = true }:{data: any[][],wpx?: number, fileName?: string,fileNameNeedTime?: boolean}) {
   const ws = XLSX.utils.aoa_to_sheet(data)
   const arr: XLSX.ColInfo[] = []
   for (let i = 0; i < data[0].length; i++) {
@@ -135,7 +135,7 @@ export function exportExcel({ data,wpx = 150,fileName }:{data: any[][],wpx?: num
   ws['!cols'] = arr
   const wb = XLSX.utils.book_new()
   XLSX.utils.book_append_sheet(wb, ws, 'sheed')
-  XLSX.writeFile(wb, (fileName || moment().format('YYYYMMDDHHmmss')) + '.xlsx')
+  XLSX.writeFile(wb, (fileName || '') + (fileNameNeedTime ? moment().format('YYYYMMDDHHmmss') : '') + '.xlsx')
 }
 function directionToAngle(direction: string): number {
   const map: Record<string, number> = {

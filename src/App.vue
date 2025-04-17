@@ -8,7 +8,8 @@ const testExportExcel = () => {
     [ '李四', 25 ]
   ]
   toolite.exportExcel({
-    data
+    data,
+    fileName: 'aaa'
   })
 }
 const setPoint = () => {
