@@ -18,8 +18,7 @@ function getCookie(cname:string) {
   }
   return ''
 }
-const createHttpClient = (options:any) => {
-  const { router } = options 
+const createHttpClient = () => {
   const service = axios.create({
     transformResponse: [ function (data) {
       try {
@@ -43,11 +42,6 @@ const createHttpClient = (options:any) => {
     if (!hasLoading || (hasLoading && config.loading !== false)) {
       loading = ElLoading.service({ fullscreen: true })
     }
-    // const userInfo = localStorage.getItem('userInfo')
-    // if (userInfo) {
-    //   const token = JSON.parse(userInfo).accessToken
-    //   config.headers.Authorization = `Bearer ${token}`
-    // }
     const token = localStorage.getItem('token')
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
@@ -111,8 +105,8 @@ const createHttpClient = (options:any) => {
         if (status === 401) {
           ElMessage.warning('登录已失效，请重新登陆')
           localStorage.clear()
-          if(router){
-            router.push('/login')
+          if (window.$router){
+            window.$router.push('/login')
           }
         } else if (status === 403) {
           // ElMessage.warning('登录已失效，请重新登陆')
