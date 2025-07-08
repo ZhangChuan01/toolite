@@ -639,3 +639,130 @@ export const listenDomSizeChange = (dom: HTMLElement | string, callback: () => v
   })
   observerContainer.observe(ele)
 }
+/**
+ * 检查密码是否符合要求
+ * @param {string} word - 要检查的密码
+ * @returns {boolean} - 如果密码符合要求，返回true，否则返回false
+ * */
+export function checkPassword(word: string) {
+  const reg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?])[A-Za-z\d!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]{8,16}$/
+  return reg.test(word)
+}
+/**
+ * 生成随机密码
+ * @returns {string} 随机密码
+ * */
+export function generatePassword() {
+  // 定义字符集
+  const lowercase = 'abcdefghijklmnopqrstuvwxyz'
+  const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  const numbers = '0123456789'
+  const specialChars = '!@#$%^&*()_+-=[]{};\':"\\|,.<>/?'
+
+  // 组合所有可用字符
+  const allChars = lowercase + uppercase + numbers + specialChars
+
+  // 随机生成密码长度 (8-16)
+  const length = Math.floor(Math.random() * 9) + 8
+
+  // 确保每个字符集至少包含一个字符
+  const password = [
+    lowercase[Math.floor(Math.random() * lowercase.length)],
+    uppercase[Math.floor(Math.random() * uppercase.length)],
+    numbers[Math.floor(Math.random() * numbers.length)],
+    specialChars[Math.floor(Math.random() * specialChars.length)]
+  ]
+
+  // 填充剩余字符
+  for (let i = password.length; i < length; i++) {
+    password.push(allChars[Math.floor(Math.random() * allChars.length)])
+  }
+
+  // 打乱字符顺序（Fisher-Yates 洗牌算法）
+  for (let i = password.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [ password[i], password[j] ] = [ password[j], password[i] ]
+  }
+
+  // 返回字符串结果
+  return password.join('')
+}
+/**
+ * 给出容器宽高以及角度，计算出中心点往角度方向延伸的一条线与容器边界的交点
+ * @param width 容器宽
+ * @param height 容器高
+ * @param angleDegrees 角度
+ * @returns { x: number, y: number } 交点
+ */
+export function findIntersection(width, height, angleDegrees) {
+  // 归一化角度到0~360度
+  angleDegrees = angleDegrees % 360
+  if (angleDegrees < 0) angleDegrees += 360
+
+  // 将角度转换为弧度
+  const angleRad = angleDegrees * Math.PI / 180
+
+  // 计算方向向量 (dx, dy) - 注意屏幕坐标系y轴向下
+  const dx = Math.sin(angleRad)
+  const dy = -Math.cos(angleRad)  // 负号表示屏幕坐标系y轴向下
+
+  // 计算中心点
+  const cx = width / 2
+  const cy = height / 2
+
+  // 存储候选交点及其参数t
+  const candidates: any = []
+
+  // 计算与上边（y=0）的交点
+  if (dy !== 0) {
+    const t = -cy / dy
+    if (t > 0) {
+      const x = cx + t * dx
+      if (x >= 0 && x <= width) {
+        candidates.push({ t, x, y: 0 })
+      }
+    }
+  }
+
+  // 计算与下边（y=height）的交点
+  if (dy !== 0) {
+    const t = (height - cy) / dy
+    if (t > 0) {
+      const x = cx + t * dx
+      if (x >= 0 && x <= width) {
+        candidates.push({ t, x, y: height })
+      }
+    }
+  }
+
+  // 计算与左边（x=0）的交点
+  if (dx !== 0) {
+    const t = -cx / dx
+    if (t > 0) {
+      const y = cy + t * dy
+      if (y >= 0 && y <= height) {
+        candidates.push({ t, x: 0, y })
+      }
+    }
+  }
+
+  // 计算与右边（x=width）的交点
+  if (dx !== 0) {
+    const t = (width - cx) / dx
+    if (t > 0) {
+      const y = cy + t * dy
+      if (y >= 0 && y <= height) {
+        candidates.push({ t, x: width, y })
+      }
+    }
+  }
+
+  // 如果没有候选点（理论上不会发生），返回中心点
+  if (candidates.length === 0) {
+    return { x: cx, y: cy }
+  }
+
+  // 选择最小的t值（最近的交点）
+  const closest = candidates.reduce((min, curr) => curr.t < min.t ? curr : min)
+  return { x: closest.x, y: closest.y }
+}
