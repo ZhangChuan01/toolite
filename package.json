@@ -1,6 +1,6 @@
 {
   "name": "toolite",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "type": "module",
   "description": "toolite",
   "main": "dist/index.js",
@@ -15,7 +15,8 @@
     "./*": "./dist/*"
   },
   "files": [
-    "dist/index*"
+    "dist/index*",
+    "dist/*/*"
   ],
   "keywords": [
     "toolite"
