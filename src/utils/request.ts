@@ -18,6 +18,8 @@ function getCookie(cname:string) {
   }
   return ''
 }
+
+let loading: any
 const createHttpClient = () => {
   const service = axios.create({
     transformResponse: [ function (data) {
@@ -33,7 +35,6 @@ const createHttpClient = () => {
       }
     } ]
   })
-  let loading: any
   service.interceptors.request.use((config: InternalRequestConfig) => {
     if (config.url?.includes('token')) {
       config.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
@@ -81,17 +82,17 @@ const createHttpClient = () => {
       if (loading) {
         loading.close()
       }
-      console.log(err)
+      console.log('request err', err)
       const { headers, data, status, message } = err.response
-      console.log('catch', headers)
+      // console.log('catch', headers)
       if (headers._abperrorformat) {
-        const already = data.error.message.includes('is already taken')
+        const already = data.error && data.error.message.includes('is already taken')
         if (already) {
-          const hasRole = data.error.message.includes('Role Name')
+          const hasRole = data.error.message.includes('Role name')
           if (hasRole) {
-            ElMessage.error('角色名称已存在')
+            window.$message.error('角色名称已存在')
           }
-          const hasUser = data.error.message.includes('User Name')
+          const hasUser = data.error.message.includes('Username')
           if (hasUser) {
             ElMessage.error('用户名称已存在')
           }
@@ -121,6 +122,7 @@ const createHttpClient = () => {
       }
     }
   }
+  
   return request
 }
 
