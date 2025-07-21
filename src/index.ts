@@ -7,7 +7,12 @@ import * as echarts from 'echarts'
 import { v4 as uuid } from 'uuid'
 import { ElMessage, ElMessageBox } from 'element-plus' 
 import useTableHook from './hooks/useTableHook'
-import * as common from './utils/common'
+import { dateFormat, dateDiff, getDateByTimeOffset, isTimeWithinIntervals,
+  exportExcel, setPosition, formatNumber, getAngle, getMouseAngleToDom, 
+  hexToRgba, downloadFile, debounce, throttle, deepClone, listenDomSizeChange,
+  isTimeRange, checkPassword, generatePassword, findIntersection
+} from './utils/common'
+
 const toolite = {
   createHttpClient,
   emitter,
@@ -21,6 +26,25 @@ const toolite = {
   confirm: ElMessageBox.confirm,
   alert: ElMessageBox.alert,
   tableHook: useTableHook,
-  ...common
+  dateFormat,
+  dateDiff,
+  getDateByTimeOffset,
+  isTimeWithinIntervals,
+  isTimeRange,
+  exportExcel,
+  setPosition,
+  formatNumber,
+  getAngle,
+  getMouseAngleToDom,
+  hexToRgba,
+  downloadFile,
+  debounce,
+  throttle,
+  deepClone,
+  listenDomSizeChange,
+  checkPassword,
+  generatePassword,
+  findIntersection
 }
+
 export default toolite
