@@ -1,7 +1,7 @@
 import moment from 'moment'
 import XLSX from 'xlsx-js-style'
 import axios from 'axios'
-
+import { ElMessage } from 'element-plus' 
 /**
  * 格式化时间
 * @param {string} date - 待格式化的日期字符串
@@ -321,7 +321,7 @@ export interface DownloadParams {
   method?: string;
   fileName?: string;
   data?: any;
-  errorCallback?: () => void;
+  errorCallback?: (error?: any) => void;
 }
 
 /**
@@ -362,7 +362,13 @@ export async function downloadFile({
     if (response.data.type === 'application/json') {
       const errorData = await new Response(response.data).json()
       console.error('服务端返回错误:', errorData)
-      errorCallback?.()
+      if(errorCallback){
+        errorCallback(errorData)
+      }else{
+        if(errorData.message){
+          ElMessage.error(errorData.message)
+        }
+      }
       return
     }
 
@@ -371,8 +377,11 @@ export async function downloadFile({
 
     // 文件名合法性检查
     if (!finalFileName) {
-      console.error('无法获取有效的文件名')
-      errorCallback?.()
+      if(errorCallback){
+        errorCallback()
+      }else{
+        ElMessage.error('无法获取有效的文件名')
+      }
       return
     }
 
@@ -380,8 +389,11 @@ export async function downloadFile({
     triggerBlobDownload(response.data, finalFileName)
 
   } catch (error) {
-    console.error('文件下载失败:', error)
-    errorCallback?.()
+    if(errorCallback){
+      errorCallback(error)
+    }else{
+      ElMessage.error('文件下载失败')
+    }
   }
 }
 
