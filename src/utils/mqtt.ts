@@ -20,16 +20,25 @@ const options = {
   connectTimeout: 4000, // 超时时间
   clientId: 'clientid-' + MathRandom
 }
-const topics = [ 'devices/temperatureVibrationSensor/pointData', 'MqCoalInventoryRadarFb','MqCoalInventoryProgressB' ]
+const topics = [ 'MqCoalInventoryLogF','MqCoalInventoryProgressB' ]
 let client: any = null
-export function mqttStart() {
-  console.log('连接')
+export function mqttStart({username, password, customTopics}:{
+  username?: string,
+  password?: string,
+  customTopics?: string[]
+}) {
+  if(username) options.username = username
+  if(password) options.password = password
+  console.log('连接mqtt',options)
   if(client && client.connected) return
   client = mqtt.connect(mqttUrl, options)
   // const client = mqtt.connect(, options)
   client.on('connect', (e: {}) => {
     console.log('web连接成功', e)
     topics.forEach(topic => {
+      client.subscribe(topic)
+    })
+    if(customTopics) customTopics.forEach(topic => {
       client.subscribe(topic)
     })
   })
