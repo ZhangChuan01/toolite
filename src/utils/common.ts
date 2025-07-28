@@ -117,16 +117,10 @@ export function isTimeWithinIntervals({ checkTime, times, type = 'start' }: { ch
 function isDateBetween(date: Date, start: Date, end: Date): boolean {
   return date > start && date < end
 }
-/**
- * 导出数据为 Excel 文件
- * @param {Object} options - 包含导出所需信息的对象
- * @param {any[][]} options.data - 要导出为 Excel 的二维数组数据，数组的每一项代表一行数据
- * @param {number} [options.wpx = 150] - 可选参数，指定 Excel 表格中每列的宽度，默认为 150
- * @param {string} [options.fileName] - 可选参数，指定导出的 Excel 文件的文件名。若未提供则只有时间戳
- * @param {boolean} [options.fileNameNeedTime = true] - 可选参数，指定是否在文件名中包含时间戳
- */
-export function exportExcel({ data, wpx = 150, fileName, fileNameNeedTime = true }: { data: any[][], wpx?: number, fileName?: string, fileNameNeedTime?: boolean }) {
-  const ws = XLSX.utils.aoa_to_sheet(data)
+
+function handleExcelData({ data, wpx = 150, merges, horizontal, vertical }:
+  { data: any[][], wpx?: number, merges?: any[], sheetName?: string, horizontal?: string, vertical?: string }) {
+  const ws = XLSX.utils.json_to_sheet(data, { skipHeader: true })
   const arr: XLSX.ColInfo[] = []
   for (let i = 0; i < data[0].length; i++) {
     arr.push({
@@ -134,8 +128,53 @@ export function exportExcel({ data, wpx = 150, fileName, fileNameNeedTime = true
     })
   }
   ws['!cols'] = arr
+  if (merges) {
+    ws['!merges'] = merges
+  }
+  if (horizontal || vertical) {
+    // 设置单元格样式
+    const range = XLSX.utils.decode_range(ws['!ref'] as string)
+    for (let R = range.s.r; R <= range.e.r; ++R) {
+      for (let C = range.s.c; C <= range.e.c; ++C) {
+        const cell_address = { c: C, r: R }
+        const cell_ref = XLSX.utils.encode_cell(cell_address)
+        if (!ws[cell_ref]) continue
+        ws[cell_ref].s = {
+          alignment: {
+            horizontal: horizontal || '',
+            vertical: vertical || ''
+          }
+        }
+      }
+    }
+  }
+  return ws
+}
+/**
+ * 导出数据为 Excel 文件
+ * @param {Object} options - 包含导出所需信息的对象
+ * @param {any[][]} options.data - 要导出为 Excel 的二维数组数据，数组的每一项代表一行数据
+ * @param {number} [options.wpx = 150] - 可选参数，指定 Excel 表格中每列的宽度，默认为 150
+ * @param {string} [options.fileName] - 可选参数，指定导出的 Excel 文件的文件名。若未提供则只有时间戳
+ * @param {boolean} [options.fileNameNeedTime = true] - 可选参数，指定是否在文件名中包含时间戳
+ * @param {any[]} [options.merges] - 可选参数，指定需要合并的单元格，例如:[{ s: { c: 0, r: 0 }, e: { c: 1, r: 0 } }]
+ * @param {string} [options.sheetName] - 可选参数，指定要导出的Excel的sheet名称
+ * 
+ */
+export function exportExcel({ data, wpx = 150, fileName, fileNameNeedTime = true,merges,sheetName,horizontal,vertical }: 
+  { data: any[][], wpx?: number, fileName?: string, fileNameNeedTime?: boolean,merges?: any[],sheetName?:string,horizontal?:string,vertical?:string }) {
+  const ws = handleExcelData({ data, wpx, merges, horizontal, vertical })
   const wb = XLSX.utils.book_new()
-  XLSX.utils.book_append_sheet(wb, ws, 'sheed')
+  XLSX.utils.book_append_sheet(wb, ws, sheetName || 'sheed')
+  XLSX.writeFile(wb, (fileName || '') + (fileNameNeedTime ? moment().format('YYYYMMDDHHmmss') : '') + '.xlsx')
+}
+export function exportManySheetExcel({ fileName, fileNameNeedTime = true,sheetData }: 
+  { fileName?: string, fileNameNeedTime?: boolean,sheetData: {data: any[][], wpx?: number, merges?: any[],sheetName?:string,horizontal?:string,vertical?:string}[] }) {
+  const wb = XLSX.utils.book_new()
+  sheetData.forEach((item, index) => {
+    const ws = handleExcelData({ data: item.data, wpx: item.wpx, merges: item.merges, horizontal: item.horizontal, vertical: item.vertical })
+    XLSX.utils.book_append_sheet(wb, ws, item.sheetName || `sheet${index + 1}`)
+  })
   XLSX.writeFile(wb, (fileName || '') + (fileNameNeedTime ? moment().format('YYYYMMDDHHmmss') : '') + '.xlsx')
 }
 function directionToAngle(direction: string): number {

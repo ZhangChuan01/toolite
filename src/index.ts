@@ -8,7 +8,7 @@ import { v4 as uuid } from 'uuid'
 import { ElMessage, ElMessageBox } from 'element-plus' 
 import useTableHook from './hooks/useTableHook'
 import { dateFormat, dateDiff, getDateByTimeOffset, isTimeWithinIntervals,
-  exportExcel, setPosition, formatNumber, getAngle, getMouseAngleToDom, 
+  exportExcel,exportManySheetExcel, setPosition, formatNumber, getAngle, getMouseAngleToDom, 
   hexToRgba, downloadFile, debounce, throttle, deepClone, listenDomSizeChange,
   isTimeRange, checkPassword, generatePassword, findIntersection
 } from './utils/common'
@@ -32,6 +32,7 @@ const toolite = {
   isTimeWithinIntervals,
   isTimeRange,
   exportExcel,
+  exportManySheetExcel,
   setPosition,
   formatNumber,
   getAngle,

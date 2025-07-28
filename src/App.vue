@@ -9,7 +9,28 @@ const testExportExcel = () => {
   ]
   toolite.exportExcel({
     data,
-    fileName: 'aaa'
+    fileName: 'aaa',
+    vertical: 'center',
+    horizontal: 'center'
+  })
+}
+const testExportManySheetExcel = () => {
+  const data1 = [
+    [ '姓名', '年龄' ],
+    [ '张三11111111', 20 ],
+    [ '李四111111111', 25 ]
+  ]
+  const data2 = [
+    [ '姓名', '年龄' ],
+    [ '张三222222222', 20 ],
+    [ '李四2222222222', 25 ]
+  ]
+  toolite.exportManySheetExcel({
+    fileName: 'manysheet',
+    sheetData: [
+      { data: data1, sheetName: 'sheet123',vertical: 'center',horizontal: 'center' },
+      { data: data2, sheetName: 'sheet2234',vertical: 'center',horizontal: 'center' }
+    ]
   })
 }
 const setPoint = () => {
@@ -57,6 +78,9 @@ onMounted(() => {
   </div>
   <button @click="testExportExcel">
     导出Excel
+  </button>
+  <button @click="testExportManySheetExcel">
+    导出多个sheet的Excel
   </button>
   <div class="point-wrapper">
     <div class="point">
