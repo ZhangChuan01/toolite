@@ -20,7 +20,7 @@ function getCookie(cname:string) {
 }
 
 let loading: any
-const createHttpClient = () => {
+const createHttpClient = (version: 'new' | 'old') => {
   const service = axios.create({
     transformResponse: [ function (data) {
       try {
@@ -68,6 +68,7 @@ const createHttpClient = () => {
       if (specialUrl.find(str => config.url?.includes(str))) {
         return data
       }
+      if(version === 'old') return data
       if (data.code !== 200) {
         ElMessage.error(data.message)
         return {
