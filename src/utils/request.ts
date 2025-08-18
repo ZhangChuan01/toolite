@@ -20,7 +20,7 @@ function getCookie(cname:string) {
 }
 
 let loading: any
-const createHttpClient = (version: 'new' | 'old') => {
+const createHttpClient = (version?: 'new' | 'old') => {
   const service = axios.create({
     transformResponse: [ function (data) {
       try {
