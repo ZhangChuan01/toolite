@@ -8,9 +8,11 @@ import vueSetupExtend from 'vite-plugin-vue-setup-extend'  //便于使用组件�
 import { resolve } from 'path'
 
 const name = 'vue3后台管理系统'
+// 获取环境变量
+const buildMode = process.env.VITE_BUILD_MODE || 'app'
+const isLib = buildMode === 'lib'
 
-// https://vitejs.dev/config/
-export default defineConfig({
+const baseConfig:any = {
   server: {
     host: '0.0.0.0'
   },
@@ -18,8 +20,8 @@ export default defineConfig({
     vue(),
     vueSetupExtend(),
     eslintPlugin({
-      include: [ 'src/**/*.js', 'src/**/*.vue', 'src/*.js', 'src/*.vue' ],
-      exclude: [ 'node_modules','dist' ]
+      include: ['src/**/*.js', 'src/**/*.vue', 'src/*.js', 'src/*.vue'],
+      exclude: ['node_modules', 'dist']
     }),
     createHtmlPlugin({
       inject: {
@@ -42,7 +44,24 @@ export default defineConfig({
       useSource: true
     })
   ],
+  
+  css: {
+    preprocessorOptions: {
+      scss: {
+        silenceDeprecations: ['legacy-js-api']
+      }
+    }
+  },
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, 'src') // 路径别名
+    },
+    extensions: ['.js', '.json', '.ts']
+  }
+}
+const libConfig = {
   build: {
+    target: 'esnext',
     lib: {
       // src/indext.ts 是我们导出组件的地方
       entry: resolve(__dirname, 'src/index.ts'),
@@ -52,7 +71,7 @@ export default defineConfig({
     },
     rollupOptions: {
       // 确保外部依赖项不应捆绑到你的库中
-      external: [ 'vue','element-plus', '@element-plus/icons-vue', /element-plus/ ],
+      external: ['vue', 'element-plus', '@element-plus/icons-vue', /element-plus/],
       output: {
         exports: 'named',
         // 提供全局变量以便在 UMD 构建中可以被外部依赖项使用
@@ -62,18 +81,15 @@ export default defineConfig({
         }
       }
     }
-  },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        silenceDeprecations: [ 'legacy-js-api' ]
-      }
-    }
-  },
-  resolve: {
-    alias: {
-      '@': resolve(__dirname, 'src') // 路径别名
-    },
-    extensions: [ '.js', '.json', '.ts' ]
   }
+}
+const appConfig = {
+  build: {
+    outDir: 'dist-app'
+  }
+}
+// https://vitejs.dev/config/
+export default defineConfig({
+  ...baseConfig,
+  ...isLib ? libConfig : appConfig
 })

@@ -1,6 +1,6 @@
 {
   "name": "toolite",
-  "version": "0.2.2",
+  "version": "0.2.4",
   "type": "module",
   "description": "toolite",
   "main": "dist/index.js",
@@ -27,8 +27,10 @@
   },
   "license": "MIT",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build && vue-tsc --emitDeclarationOnly",
+    "build": "yarn build:lib",
+    "build:lib": "cross-env VITE_BUILD_MODE=lib vite build && vue-tsc --emitDeclarationOnly",
+    "build:app": "cross-env VITE_BUILD_MODE=app vite build",
+    "type-check": "vue-tsc --emitDeclarationOnly",
     "types": "vue-tsc ",
     "preview": "vite preview"
   },
@@ -39,7 +41,7 @@
     "konva": "^9.3.20",
     "mitt": "^3.0.1",
     "moment": "^2.30.1",
-    "mqtt": "^5.13.1",
+    "mqtt": "5.6.2",
     "uuid": "^11.1.0",
     "xlsx-js-style": "^1.2.0"
   },
@@ -54,6 +56,7 @@
     "@vitejs/plugin-legacy": "^4.0.1",
     "@vitejs/plugin-vue": "^4.2.3",
     "autoprefixer": "^10.4.13",
+    "cross-env": "^10.0.0",
     "element-plus": "^2.9.3",
     "eslint": "^8.33.0",
     "eslint-plugin-vue": "^9.9.0",

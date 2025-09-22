@@ -3,10 +3,10 @@ import emitter from './emitter'
 
 let mqttUrl = ''
 if (process.env.NODE_ENV === 'development') {
-  mqttUrl = 'ws://192.168.8.181:8083/mqtt'
+  mqttUrl = 'ws://192.168.8.107:8083'
 } else {
   // mqttUrl = 'http://192.168.8.45:8083/mqtt'
-  mqttUrl = window.location.origin + '/mqtt'
+  mqttUrl = window.location.origin
 }
 function S4 () {
   return (((1 + Math.random()) * 0x10000) | 0).toString(32).substring(1)
@@ -18,7 +18,8 @@ const options = {
   password: '1qaz@WSX',
   clean: true, // true: 清除会话, false: 保留会话
   connectTimeout: 4000, // 超时时间
-  clientId: 'clientid-' + MathRandom
+  clientId: 'clientid-' + MathRandom,
+  path: '/mqtt'
 }
 const topics = [ 'MqCoalInventoryLogF','MqCoalInventoryProgressB' ]
 let client: any = null
@@ -27,9 +28,10 @@ export function mqttStart({username, password, customTopics}:{
   password?: string,
   customTopics?: string[]
 }) {
+  console.log('mqttStart', username, password, customTopics)
   if(username) options.username = username
   if(password) options.password = password
-  console.log('连接mqtt',options)
+  console.log('连接mqtt', options, mqttUrl)
   if(client && client.connected) return
   client = mqtt.connect(mqttUrl, options)
   // const client = mqtt.connect(, options)

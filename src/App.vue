@@ -62,6 +62,7 @@ onMounted(() => {
   setPoint()
   addMouseMoveEvent()
   listenDom()
+  toolite.mqttStart({})
 })
 </script>
 
