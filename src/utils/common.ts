@@ -1,7 +1,7 @@
 import moment from 'moment'
 import XLSX from 'xlsx-js-style'
 import axios from 'axios'
-import { ElMessage } from 'element-plus' 
+import { ElMessage, ElLoading } from 'element-plus' 
 /**
  * 格式化时间
 * @param {string} date - 待格式化的日期字符串
@@ -388,10 +388,10 @@ export async function downloadFile({
       // 根据请求方法自动处理参数位置
       ...(data && (method.toLowerCase() === 'get' ? { params: data } : { data }))
     }
-
+    const loading = ElLoading.service({ fullscreen: true,text: '文件下载中' })
     // 发送请求并获取响应
     const response = await axios(config)
-
+    loading.close()
     // 响应数据类型校验
     if (!(response.data instanceof Blob)) {
       throw new Error('响应不是文件流类型')

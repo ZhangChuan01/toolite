@@ -23,7 +23,7 @@ const options = {
 }
 const topics = [ 'MqCoalInventoryLogF','MqCoalInventoryProgressB' ]
 let client: any = null
-export function mqttStart({username, password, customTopics}:{
+export function mqttStart({ username, password, customTopics }:{
   username?: string,
   password?: string,
   customTopics?: string[]

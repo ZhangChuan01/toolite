@@ -1,6 +1,6 @@
 {
   "name": "toolite",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "type": "module",
   "description": "toolite",
   "main": "dist/index.js",
@@ -27,6 +27,7 @@
   },
   "license": "MIT",
   "scripts": {
+    "dev": "vite",
     "build": "yarn build:lib",
     "build:lib": "cross-env VITE_BUILD_MODE=lib vite build && vue-tsc --emitDeclarationOnly",
     "build:app": "cross-env VITE_BUILD_MODE=app vite build",

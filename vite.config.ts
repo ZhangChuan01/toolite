@@ -20,8 +20,8 @@ const baseConfig:any = {
     vue(),
     vueSetupExtend(),
     eslintPlugin({
-      include: ['src/**/*.js', 'src/**/*.vue', 'src/*.js', 'src/*.vue'],
-      exclude: ['node_modules', 'dist']
+      include: [ 'src/**/*.js', 'src/**/*.vue', 'src/*.js', 'src/*.vue' ],
+      exclude: [ 'node_modules', 'dist' ]
     }),
     createHtmlPlugin({
       inject: {
@@ -48,7 +48,7 @@ const baseConfig:any = {
   css: {
     preprocessorOptions: {
       scss: {
-        silenceDeprecations: ['legacy-js-api']
+        silenceDeprecations: [ 'legacy-js-api' ]
       }
     }
   },
@@ -56,7 +56,7 @@ const baseConfig:any = {
     alias: {
       '@': resolve(__dirname, 'src') // 路径别名
     },
-    extensions: ['.js', '.json', '.ts']
+    extensions: [ '.js', '.json', '.ts' ]
   }
 }
 const libConfig = {
@@ -71,7 +71,7 @@ const libConfig = {
     },
     rollupOptions: {
       // 确保外部依赖项不应捆绑到你的库中
-      external: ['vue', 'element-plus', '@element-plus/icons-vue', /element-plus/],
+      external: [ 'vue', 'element-plus', '@element-plus/icons-vue', /element-plus/ ],
       output: {
         exports: 'named',
         // 提供全局变量以便在 UMD 构建中可以被外部依赖项使用
