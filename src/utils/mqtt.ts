@@ -3,7 +3,7 @@ import emitter from './emitter'
 
 let mqttUrl = ''
 if (process.env.NODE_ENV === 'development') {
-  mqttUrl = 'ws://192.168.8.107:8083'
+  mqttUrl = 'ws://192.168.8.181:8083'
 } else {
   // mqttUrl = 'http://192.168.8.45:8083/mqtt'
   mqttUrl = window.location.origin
@@ -23,20 +23,22 @@ const options = {
 }
 const topics = [ 'MqCoalInventoryLogF','MqCoalInventoryProgressB' ]
 let client: any = null
-export function mqttStart({ username, password, customTopics }:{
+export function mqttStart({ username, password, customTopics, devUrl }:{
   username?: string,
   password?: string,
-  customTopics?: string[]
+  customTopics?: string[],
+  devUrl?: string
 }) {
   console.log('mqttStart', username, password, customTopics)
   if(username) options.username = username
   if(password) options.password = password
+  if(devUrl && process.env.NODE_ENV === 'development') mqttUrl = devUrl
   console.log('连接mqtt', options, mqttUrl)
   if(client && client.connected) return
   client = mqtt.connect(mqttUrl, options)
   // const client = mqtt.connect(, options)
   client.on('connect', (e: {}) => {
-    console.log('web连接成功', e)
+    console.log('mqtt连接成功', e)
     topics.forEach(topic => {
       client.subscribe(topic)
     })
@@ -46,11 +48,11 @@ export function mqttStart({ username, password, customTopics }:{
   })
   // 断开发起重连
   client.on('reconnect', (error: {}) => {
-    console.log('web正在重连...', error)
+    console.log('mqtt正在重连...', error)
   })
   // 链接异常处理
   client.on('error', (error: {}) => {
-    console.log('web连接失败...', error)
+    console.log('mqtt连接失败...', error)
   })
 
   client.on('message', (topic: string, message: any) => {
