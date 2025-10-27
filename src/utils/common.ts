@@ -250,44 +250,126 @@ export function setPosition({ dom, angle, radius, rotate = false, center, startA
  */
 export function formatNumber(
   number: number | string | null | undefined,
-  decimal: number = 2
-): number | string | undefined {
+  decimal: number = 2,
+  round: boolean = false
+): number | string {
   if (!number) return 0
 
   // 处理字符串输入（如大数传成字符串避免精度丢失）
   if (typeof number === 'string') {
-    return handleStringInput(number, decimal)
+    return handleStringInput(number, decimal, round)
+  }else {
+    return handleStringInput(number.toString(), decimal, round)
   }
-
-  // 处理科学计数法并截断
-  const decimalDigits = Math.max(0, Math.floor(decimal))
-  const factor = 10 ** decimalDigits
-  return Math.trunc(number * factor) / factor
 }
 
 /**
  * 处理字符串类型的数字（直接操作字符串避免精度丢失）
  */
-function handleStringInput(numStr: string, decimal: number): string | number {
-  const decimalDigits = Math.max(0, Math.floor(decimal))
-  const [ integerPart, fractionalPart = '' ] = numStr.split('.')
+// function handleStringInput(numStr: string, decimal: number): string | number {
+//   const decimalDigits = Math.max(0, Math.floor(decimal))
+//   const [ integerPart, fractionalPart = '' ] = numStr.split('.')
 
-  // 直接截断小数部分（不四舍五入）
-  const truncatedFraction = fractionalPart.slice(0, decimalDigits)
-  const result = decimalDigits === 0
-    ? integerPart
-    : `${integerPart}.${truncatedFraction.padEnd(decimalDigits, '0')}`
+//   // 直接截断小数部分（不四舍五入）
+//   const truncatedFraction = fractionalPart.slice(0, decimalDigits)
+//   const result = decimalDigits === 0
+//     ? integerPart
+//     : `${integerPart}.${truncatedFraction.padEnd(decimalDigits, '0')}`
+
+//   // 返回字符串或自动转换回数字（根据是否丢失精度）
+//   return isSafeToConvert(result) ? Number(result) : result
+// }
+/**
+ * 处理字符串类型的数字（直接操作字符串避免精度丢失）
+ * @param numStr 数字字符串
+ * @param decimal 要保留的小数位数
+ * @param round 是否进行四舍五入，默认为false（直接截断）
+ */
+function handleStringInput(numStr: string, decimal: number, round: boolean = false): string | number {
+  console.log('handleStringInput', numStr, decimal, round)
+  const decimalDigits = Math.max(0, Math.floor(decimal))
+  const [integerPart, fractionalPart = ''] = numStr.split('.')
+
+  let result: string
+
+  if (decimalDigits === 0) {
+    // 处理整数情况
+    if (!round || !fractionalPart || parseInt(fractionalPart[0] || '0') < 5) {
+      result = integerPart
+    } else {
+      // 四舍五入进位到整数
+      result = (BigInt(integerPart) + 1n).toString()
+    }
+  } else {
+    // 处理小数情况
+    if (fractionalPart.length <= decimalDigits) {
+      // 小数位数不足，直接补零
+      result = `${integerPart}.${fractionalPart.padEnd(decimalDigits, '0')}`
+    } else if (!round) {
+      // 不四舍五入，直接截断
+      result = `${integerPart}.${fractionalPart.slice(0, decimalDigits)}`
+    } else {
+      // 四舍五入处理
+      result = roundFractionalPart(integerPart, fractionalPart, decimalDigits)
+    }
+  }
 
   // 返回字符串或自动转换回数字（根据是否丢失精度）
   return isSafeToConvert(result) ? Number(result) : result
 }
 
 /**
- * 检查转换后的字符串是否在 JS 安全精度范围内
+ * 对小数部分进行四舍五入处理
+ */
+function roundFractionalPart(integerPart: string, fractionalPart: string, decimalDigits: number): string {
+  const keepPart = fractionalPart.slice(0, decimalDigits)
+  const nextDigit = fractionalPart[decimalDigits] || '0'
+
+  if (parseInt(nextDigit) < 5) {
+    // 直接舍去
+    return `${integerPart}.${keepPart}`
+  } else {
+    // 需要进位
+    return addOneToFractional(integerPart, keepPart, decimalDigits)
+  }
+}
+
+/**
+ * 对小数部分进行进位操作
+ */
+function addOneToFractional(integerPart: string, fractionalPart: string, decimalDigits: number): string {
+  // 将整数部分和小数部分组合成完整数字进行进位计算
+  const fullNumber = BigInt(integerPart + fractionalPart.padEnd(decimalDigits, '0'))
+  const addValue = BigInt('1' + '0'.repeat(decimalDigits - fractionalPart.length))
+
+  const resultNumber = fullNumber + addValue
+  const resultStr = resultNumber.toString()
+
+  // 重新分割整数和小数部分
+  if (resultStr.length <= decimalDigits) {
+    // 结果位数小于等于小数位数，说明整数部分为0
+    const fractional = resultStr.padStart(decimalDigits, '0')
+    return `0.${fractional}`
+  } else {
+    const newInteger = resultStr.slice(0, -decimalDigits)
+    const newFractional = resultStr.slice(-decimalDigits)
+    return `${newInteger}.${newFractional}`
+  }
+}
+
+/**
+ * 判断是否可以安全转换为数字
  */
 function isSafeToConvert(numStr: string): boolean {
-  return Math.abs(Number(numStr)) <= Number.MAX_SAFE_INTEGER
+  try {
+    const num = Number(numStr)
+    // 检查是否为有限数且没有精度丢失
+    return Number.isFinite(num) && num.toString() === numStr
+  } catch {
+    return false
+  }
 }
+
 /**
  * 计算从 point2 到 point1 的角度（以度为单位），角度范围在 0 到 360 度之间
  * 

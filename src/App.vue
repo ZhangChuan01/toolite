@@ -88,7 +88,7 @@ onMounted(() => {
       90
     </div>
   </div>
-  <div>{{ toolite.formatNumber(12345.678901234567890123456789,2) }}</div>
+  <div>{{ toolite.formatNumber(12345.678901234567890123456789,2,true) }}</div>
   <div>{{ toolite.getDateByTimeOffset({startTime: new Date(),num:1,type:'d',format:'YYYY-MM-DD HH:mm:ss'}) }}</div>
   <div>{{ toolite.getAngle([0,0],[1,1]) }}</div>
   <div>
