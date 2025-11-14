@@ -29,11 +29,11 @@ export function mqttStart({ username, password, customTopics, devUrl }:{
   customTopics?: string[],
   devUrl?: string
 }) {
-  console.log('mqttStart', username, password, customTopics)
+  console.log('mqttStart')
   if(username) options.username = username
   if(password) options.password = password
   if(devUrl && process.env.NODE_ENV === 'development') mqttUrl = devUrl
-  console.log('连接mqtt', options, mqttUrl)
+  console.log('连接mqtt')
   if(client && client.connected) return
   client = mqtt.connect(mqttUrl, options)
   // const client = mqtt.connect(, options)

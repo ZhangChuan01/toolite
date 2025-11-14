@@ -20,7 +20,7 @@ function getCookie(cname:string) {
 }
 
 let loading: any
-const createHttpClient = (version?: 'new' | 'old') => {
+const createHttpClient = (version: 'new' | 'old' = 'new',msgMap?: {[key: string]: string}[]) => {
   const service = axios.create({
     transformResponse: [ function (data) {
       try {
@@ -87,22 +87,27 @@ const createHttpClient = (version?: 'new' | 'old') => {
       const { headers, data, status, message } = err.response
       // console.log('catch', headers)
       if (headers._abperrorformat) {
-        const already = data.error && data.error.message.includes('is already taken')
-        if (already) {
-          const hasRole = data.error.message.includes('Role name')
-          if (hasRole) {
-            window.$message.error('角色名称已存在')
-          }
-          const hasUser = data.error.message.includes('Username')
-          if (hasUser) {
-            ElMessage.error('用户名称已存在')
-          }
-          if (!hasRole && !hasUser) {
-            ElMessage.error(data.error.message)
-          }
-        } else {
+        if(msgMap && msgMap[data.error.message]) {
+          ElMessage.error(msgMap[data.error.message])
+        }else {
           ElMessage.error(data.error.message)
         }
+        // const already = data.error && data.error.message.includes('is already taken')
+        // if (already) {
+        //   const hasRole = data.error.message.includes('Role name')
+        //   if (hasRole) {
+        //     window.$message.error('角色名称已存在')
+        //   }
+        //   const hasUser = data.error.message.includes('Username')
+        //   if (hasUser) {
+        //     ElMessage.error('用户名称已存在')
+        //   }
+        //   if (!hasRole && !hasUser) {
+        //     ElMessage.error(data.error.message)
+        //   }
+        // } else {
+        //   ElMessage.error(data.error.message)
+        // }
       } else {
         if (status === 401) {
           ElMessage.warning('登录已失效，请重新登陆')
