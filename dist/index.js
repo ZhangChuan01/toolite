@@ -86119,7 +86119,17 @@ function tRe(r, e, t) {
   const u = l.reduce((c, f) => f.t < c.t ? f : c);
   return { x: u.x, y: u.y };
 }
-const gRe = {
+const rRe = (r, e) => {
+  const t = {};
+  return r.forEach((i) => {
+    const a = JSON.stringify(e(i));
+    t[a] = t[a] || [], t[a].push(i);
+  }), Object.keys(t).map((i) => t[i]);
+};
+function nRe({ list: r, groupId: e, isSort: t = !0 }) {
+  return r = r.filter((a) => a[e]), t && r.sort((a, n) => !isNaN(Number(a[e])) && typeof Number(a[e]) == "number" ? Number(a[e]) - Number(n[e]) : a[e] > n[e] ? 1 : -1), rRe(r, (a) => [a[e]]);
+}
+const yRe = {
   createHttpClient: Iie,
   emitter: Sz,
   mqttStart: Toe,
@@ -86151,8 +86161,9 @@ const gRe = {
   listenDomSizeChange: JPe,
   checkPassword: QPe,
   generatePassword: eRe,
-  findIntersection: tRe
+  findIntersection: tRe,
+  groupByField: nRe
 };
 export {
-  gRe as default
+  yRe as default
 };

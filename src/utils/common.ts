@@ -919,7 +919,7 @@ const groupBy = (array: any, f: any) => {
  * @param {string} [options.isSort=true] - 可选参数，是否需要排序，默认为 true
  * @returns {Array} 转换后的数组
  */
-export function arrayGroupBy({ list, groupId, isSort = true }: { list: any[], groupId: string, isSort?: boolean }) {
+export function groupByField({ list, groupId, isSort = true }: { list: any[], groupId: string, isSort?: boolean }) {
   list = list.filter((item: any) => item[groupId])
   if (isSort) {
     list.sort((a: any, b: any) => {

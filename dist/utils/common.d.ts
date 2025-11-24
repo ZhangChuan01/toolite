@@ -255,7 +255,7 @@ export declare function findIntersection(width: any, height: any, angleDegrees: 
  * @param {string} [options.isSort=true] - 可选参数，是否需要排序，默认为 true
  * @returns {Array} 转换后的数组
  */
-export declare function arrayGroupBy({ list, groupId, isSort }: {
+export declare function groupByField({ list, groupId, isSort }: {
     list: any[];
     groupId: string;
     isSort?: boolean;

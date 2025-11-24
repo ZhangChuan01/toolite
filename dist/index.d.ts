@@ -3,7 +3,7 @@ import MyKonva from './utils/MyKonva';
 import * as echarts from 'echarts';
 import { v4 as uuid } from 'uuid';
 import useTableHook from './hooks/useTableHook';
-import { dateFormat, dateDiff, getDateByTimeOffset, isTimeWithinIntervals, exportExcel, exportManySheetExcel, setPosition, formatNumber, getAngle, getMouseAngleToDom, hexToRgba, downloadFile, throttle, deepClone, isTimeRange, checkPassword, generatePassword, findIntersection } from './utils/common';
+import { dateFormat, dateDiff, getDateByTimeOffset, isTimeWithinIntervals, exportExcel, exportManySheetExcel, setPosition, formatNumber, getAngle, getMouseAngleToDom, hexToRgba, downloadFile, throttle, deepClone, isTimeRange, checkPassword, generatePassword, findIntersection, groupByField } from './utils/common';
 declare const toolite: {
     createHttpClient: (version?: "new" | "old", msgMap?: {
         [key: string]: string;
@@ -41,5 +41,6 @@ declare const toolite: {
     checkPassword: typeof checkPassword;
     generatePassword: typeof generatePassword;
     findIntersection: typeof findIntersection;
+    groupByField: typeof groupByField;
 };
 export default toolite;
