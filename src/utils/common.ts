@@ -288,7 +288,7 @@ export function formatNumber(
 function handleStringInput(numStr: string, decimal: number, round: boolean = false): string | number {
   console.log('handleStringInput', numStr, decimal, round)
   const decimalDigits = Math.max(0, Math.floor(decimal))
-  const [integerPart, fractionalPart = ''] = numStr.split('.')
+  const [ integerPart, fractionalPart = '' ] = numStr.split('.')
 
   let result: string
 
@@ -898,4 +898,40 @@ export function findIntersection(width, height, angleDegrees) {
   // 选择最小的t值（最近的交点）
   const closest = candidates.reduce((min, curr) => curr.t < min.t ? curr : min)
   return { x: closest.x, y: closest.y }
+}
+
+const groupBy = (array: any, f: any) => {
+  const groups: any = {}
+  array.forEach((o: any) => {
+    const group = JSON.stringify(f(o))
+    groups[group] = groups[group] || []
+    groups[group].push(o)
+  })
+  return Object.keys(groups).map(group => {
+    return groups[group]
+  })
+}
+/**
+ * 一维数组转二维数组
+ * @param {Object} options - 参数对象
+ * @param {string} options.list - 需要转化的数组
+ * @param {string} options.groupId - 对象数组中的指定字段名，用于分组
+ * @param {string} [options.isSort=true] - 可选参数，是否需要排序，默认为 true
+ * @returns {Array} 转换后的数组
+ */
+export function arrayGroupBy({ list, groupId, isSort = true }: { list: any[], groupId: string, isSort?: boolean }) {
+  list = list.filter((item: any) => item[groupId])
+  if (isSort) {
+    list.sort((a: any, b: any) => {
+      if (!isNaN(Number(a[groupId])) && typeof Number(a[groupId]) === 'number') {
+        return Number(a[groupId]) - Number(b[groupId])
+      } else {
+        return a[groupId] > b[groupId] ? 1 : -1
+      }
+    })
+  }
+  const sorted = groupBy(list, (item: any) => {
+    return [ item[groupId] ]
+  })
+  return sorted
 }

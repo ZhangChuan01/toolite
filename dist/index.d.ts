@@ -1,0 +1,45 @@
+import { mqttStart, mqttStop } from './utils/mqtt';
+import MyKonva from './utils/MyKonva';
+import * as echarts from 'echarts';
+import { v4 as uuid } from 'uuid';
+import useTableHook from './hooks/useTableHook';
+import { dateFormat, dateDiff, getDateByTimeOffset, isTimeWithinIntervals, exportExcel, exportManySheetExcel, setPosition, formatNumber, getAngle, getMouseAngleToDom, hexToRgba, downloadFile, throttle, deepClone, isTimeRange, checkPassword, generatePassword, findIntersection } from './utils/common';
+declare const toolite: {
+    createHttpClient: (version?: "new" | "old", msgMap?: {
+        [key: string]: string;
+    }[] | undefined) => <_T = any>(config: import("./utils/request").RequestConfig) => Promise<any>;
+    emitter: import("mitt").Emitter<any>;
+    mqttStart: typeof mqttStart;
+    mqttStop: typeof mqttStop;
+    MyKonva: typeof MyKonva;
+    echarts: typeof echarts;
+    uuid: typeof uuid;
+    message: import("element-plus/es/utils").SFCInstallWithContext<import("element-plus").Message>;
+    messageBox: import("element-plus/es/utils").SFCWithInstall<import("element-plus").IElMessageBox>;
+    confirm: import("element-plus").ElMessageBoxShortcutMethod;
+    alert: import("element-plus").ElMessageBoxShortcutMethod;
+    tableHook: typeof useTableHook;
+    dateFormat: typeof dateFormat;
+    dateDiff: typeof dateDiff;
+    getDateByTimeOffset: typeof getDateByTimeOffset;
+    isTimeWithinIntervals: typeof isTimeWithinIntervals;
+    isTimeRange: typeof isTimeRange;
+    exportExcel: typeof exportExcel;
+    exportManySheetExcel: typeof exportManySheetExcel;
+    setPosition: typeof setPosition;
+    formatNumber: typeof formatNumber;
+    getAngle: typeof getAngle;
+    getMouseAngleToDom: typeof getMouseAngleToDom;
+    hexToRgba: typeof hexToRgba;
+    downloadFile: typeof downloadFile;
+    debounce: <T extends (...args: any[]) => any>(func: T, delay: number, immediate?: boolean) => ((...args: Parameters<T>) => ReturnType<T>) & {
+        cancel: () => void;
+    };
+    throttle: typeof throttle;
+    deepClone: typeof deepClone;
+    listenDomSizeChange: (dom: string | HTMLElement, callback: () => void) => void;
+    checkPassword: typeof checkPassword;
+    generatePassword: typeof generatePassword;
+    findIntersection: typeof findIntersection;
+};
+export default toolite;
