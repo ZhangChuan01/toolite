@@ -66,7 +66,7 @@ export declare function isTimeWithinIntervals({ checkTime, times, type }: {
  * @param {any[][]} options.data - 要导出为 Excel 的二维数组数据，数组的每一项代表一行数据
  * @param {number} [options.wpx = 150] - 可选参数，指定 Excel 表格中每列的宽度，默认为 150
  * @param {string} [options.fileName] - 可选参数，指定导出的 Excel 文件的文件名。若未提供则只有时间戳
- * @param {boolean} [options.fileNameNeedTime = true] - 可选参数，指定是否在文件名中包含时间戳
+ * @param {boolean} [options.fileNameNeedTime = true] - 可选参数，指定是否在文件名中包含时间戳，默认包含
  * @param {any[]} [options.merges] - 可选参数，指定需要合并的单元格，例如:[{ s: { c: 0, r: 0 }, e: { c: 1, r: 0 } }]
  * @param {string} [options.sheetName] - 可选参数，指定要导出的Excel的sheet名称
  *
@@ -120,8 +120,9 @@ export declare function setPosition({ dom, angle, radius, rotate, center, startA
 }): void;
 /**
  * 安全截断数值（不四舍五入），避免科学计数法和精度丢失问题
- * @param number 待处理的数字（可接受字符串输入确保精度）
- * @param decimal 保留的小数位数（默认2，自动转为非负整数）
+ * @param {number | string | null | undefined} number 待处理的数字（可接受字符串输入确保精度）
+ * @param {number} decimal 保留的小数位数（默认2，自动转为非负整数）
+ * @param {boolean} round 是否四舍五入（默认false）
  * @returns 截断后的数字或原字符串（若输入为字符串）
  */
 export declare function formatNumber(number: number | string | null | undefined, decimal?: number, round?: boolean): number | string;
@@ -260,3 +261,11 @@ export declare function groupByField({ list, groupId, isSort }: {
     groupId: string;
     isSort?: boolean;
 }): any[];
+/**
+ * 获取对象中指定路径（属性）的值
+ * @param {object} obj 要获取值的对象
+ * @param {string} path 属性路径
+ * @param {any} defaultValue 默认值，可选参数，如获取不到值，返回默认值，默认为空字符串
+ * @returns
+ */
+export declare function getSafeValue(obj: any, path: any, defaultValue?: string): any;

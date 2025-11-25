@@ -86129,7 +86129,14 @@ const rRe = (r, e) => {
 function nRe({ list: r, groupId: e, isSort: t = !0 }) {
   return r = r.filter((a) => a[e]), t && r.sort((a, n) => !isNaN(Number(a[e])) && typeof Number(a[e]) == "number" ? Number(a[e]) - Number(n[e]) : a[e] > n[e] ? 1 : -1), rRe(r, (a) => [a[e]]);
 }
-const yRe = {
+function iRe(r, e, t = "") {
+  try {
+    return e.replace(/\[(\w+)\]/g, ".$1").replace(/^\./, "").split(".").reduce((i, a) => i && i[a], r) || t;
+  } catch {
+    return t;
+  }
+}
+const _Re = {
   createHttpClient: Iie,
   emitter: Sz,
   mqttStart: Toe,
@@ -86162,8 +86169,9 @@ const yRe = {
   checkPassword: QPe,
   generatePassword: eRe,
   findIntersection: tRe,
-  groupByField: nRe
+  groupByField: nRe,
+  getSafeValue: iRe
 };
 export {
-  yRe as default
+  _Re as default
 };

@@ -10,7 +10,8 @@ import useTableHook from './hooks/useTableHook'
 import { dateFormat, dateDiff, getDateByTimeOffset, isTimeWithinIntervals,
   exportExcel,exportManySheetExcel, setPosition, formatNumber, getAngle, getMouseAngleToDom, 
   hexToRgba, downloadFile, debounce, throttle, deepClone, listenDomSizeChange,
-  isTimeRange, checkPassword, generatePassword, findIntersection, groupByField
+  isTimeRange, checkPassword, generatePassword, findIntersection, groupByField,
+  getSafeValue
 } from './utils/common'
 
 const toolite = {
@@ -46,7 +47,8 @@ const toolite = {
   checkPassword,
   generatePassword,
   findIntersection,
-  groupByField
+  groupByField,
+  getSafeValue
 }
 
 export default toolite
