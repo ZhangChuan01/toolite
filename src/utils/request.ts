@@ -19,7 +19,7 @@ function getCookie(cname:string) {
   return ''
 }
 
-let loading: any
+let loading: any,loadingUrl: string = ''
 const createHttpClient = (version: 'new' | 'old' = 'new',msgMap?: {[key: string]: string}[]) => {
   const service = axios.create({
     transformResponse: [ function (data) {
@@ -42,6 +42,7 @@ const createHttpClient = (version: 'new' | 'old' = 'new',msgMap?: {[key: string]
     const hasLoading = Object.hasOwnProperty.call(config, 'loading')
     if (!hasLoading || (hasLoading && config.loading !== false)) {
       loading = ElLoading.service({ fullscreen: true })
+      loadingUrl = config.url || ''
     }
     const token = localStorage.getItem('token')
     if (token) {
@@ -51,7 +52,7 @@ const createHttpClient = (version: 'new' | 'old' = 'new',msgMap?: {[key: string]
     if (xsrfToken) {
       config.headers.Requestverificationtoken = xsrfToken
     }
-    config.headers['Accept-Language'] = 'zh-CN,zh;q=0.9,en;q=0.8'
+    config.headers['Accept-Language'] = 'zh-Hans,zh-CN,zh;q=0.9,en;q=0.8'
     return config
   })
   const specialUrl = [ '/OData', '/token', '/permission', '/identity' ]
@@ -62,9 +63,11 @@ const createHttpClient = (version: 'new' | 'old' = 'new',msgMap?: {[key: string]
       //   ElMessage.error(data.message)
       // }
       // console.log('data', data)
-      if (loading) {
-        loading.close()
-      }
+      setTimeout(() => {
+        if (loading && loadingUrl === config.url) {
+          loading.close()
+        }
+      }, 500)
       if (specialUrl.find(str => config.url?.includes(str))) {
         return data
       }
